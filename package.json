@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "server.js",
 	"scripts": {
-		"dev": "node --watch --env-file=backend/.env backend/server.js",
+		"dev": "NODE_ENV=development node --watch --env-file=.env backend/server.js",
 		"start": "NODE_ENV=production node backend/server.js",
 		"build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
 	},
