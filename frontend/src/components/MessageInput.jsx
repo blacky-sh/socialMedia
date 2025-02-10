@@ -23,6 +23,7 @@ import {
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { BsFillImageFill } from "react-icons/bs";
 import usePreviewImg from "../hooks/usePreviewImg";
+import messageSentSound from "../assets/sounds/messageSent.mp3";
 
 const MessageInput = ({ setMessages }) => {
   const [messageText, setMessageText] = useState("");
@@ -78,6 +79,9 @@ const MessageInput = ({ setMessages }) => {
       });
       setMessageText("");
       setImgUrl("");
+
+      const sound = new Audio(messageSentSound);
+      sound.play();
     } catch (error) {
       showToast("Error", error.message, "error");
     } finally {
