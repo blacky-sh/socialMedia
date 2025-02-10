@@ -22,6 +22,7 @@ import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext.jsx";
 import { MdClose } from "react-icons/md";
 import messageSound from "../assets/sounds/message.mp3";
+import { useNavigate } from "react-router-dom";
 
 const MessageContainer = () => {
   const showToast = useShowToast();
@@ -33,6 +34,7 @@ const MessageContainer = () => {
   const setConversations = useSetRecoilState(conversationsAtom);
   const setSelectedConversation = useSetRecoilState(selectedConversationAtom);
   const messageEndRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket.on("newMessage", (message) => {
@@ -126,6 +128,11 @@ const MessageContainer = () => {
     setSelectedConversation({});
   };
 
+  const handleProfileClick = () => {
+    navigate(`/${selectedConversation.username}`);
+    // console.log(selectedConversation.username);
+  };
+
   return (
     <Flex
       flex="70"
@@ -144,7 +151,7 @@ const MessageContainer = () => {
         borderRadius={"md"}
         justifyContent={"space-between"}
       >
-        <Flex gap={2}>
+        <Flex gap={2} onClick={handleProfileClick} cursor="pointer">
           <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
           <Text display={"flex"} alignItems={"center"}>
             {selectedConversation.username}{" "}
