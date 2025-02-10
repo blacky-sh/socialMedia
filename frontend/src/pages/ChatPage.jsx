@@ -147,7 +147,7 @@ const ChatPage = () => {
         mx={"auto"}
       >
         <Flex
-          flex={30}
+          flex={50}
           gap={2}
           flexDirection={"column"}
           maxW={{ sm: "250px", md: "full" }}
@@ -207,7 +207,7 @@ const ChatPage = () => {
         </Flex>
         {!selectedConversation._id && (
           <Flex
-            flex={70}
+            flex={50}
             borderRadius={"md"}
             p={2}
             flexDir={"column"}

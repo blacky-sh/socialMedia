@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
+import { formatDistanceToNow } from "date-fns";
 import { BsCheck2All, BsFillImageFill } from "react-icons/bs";
 import { selectedConversationAtom } from "../atoms/messagesAtom";
 
@@ -66,10 +67,16 @@ const Conversation = ({ conversation, isOnline }) => {
         </Avatar>
       </WrapItem>
 
-      <Stack direction={"column"} fontSize={"sm"}>
-        <Text fontWeight="700" display={"flex"} alignItems={"center"}>
-          {user.username} <Image src="/verified.png" w={4} h={4} ml={1} />
-        </Text>
+      <Stack direction={"column"} fontSize={"sm"} w={"100%"}>
+        <Flex justifyContent={"space-between"}>
+          <Text fontWeight="700" display={"flex"} alignItems={"center"}>
+            {user.username} <Image src="/verified.png" w={4} h={4} ml={1} />
+          </Text>
+          <Text fontSize={"xs"}>
+            {formatDistanceToNow(new Date(conversation.updatedAt))} ago
+          </Text>
+        </Flex>
+
         <Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
           {currentUser._id === lastMessage.sender ? (
             <Box color={lastMessage.seen ? "blue.400" : ""}>
