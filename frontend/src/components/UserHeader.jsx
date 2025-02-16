@@ -160,7 +160,7 @@ const UserHeader = ({ user }) => {
         </Link>
       )}
       {currentUser?._id !== user._id && (
-        <>
+        <Flex gap={2}>
           <Button
             size={"sm"}
             onClick={handleFollowUnfollow}
@@ -173,7 +173,7 @@ const UserHeader = ({ user }) => {
               Message
             </Button>
           )}
-        </>
+        </Flex>
       )}
       <Flex w={"full"} justifyContent={"space-between"}>
         <Flex gap={2} alignItems={"center"}>
