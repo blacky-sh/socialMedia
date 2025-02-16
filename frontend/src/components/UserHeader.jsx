@@ -11,6 +11,9 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import useFollowUnfollow from "../hooks/useFollowUnfollow";
 import { selectedConversationAtom } from "../atoms/messagesAtom";
 import { useSetRecoilState } from "recoil";
+import { useState } from "react";
+import FollowersModal from "./FollowersModal";
+import FollowingModal from "./FollowingModal";
 
 const UserHeader = ({ user }) => {
   const toast = useToast();
@@ -18,6 +21,28 @@ const UserHeader = ({ user }) => {
   const { handleFollowUnfollow, following, updating } = useFollowUnfollow(user);
   const setSelectedConversation = useSetRecoilState(selectedConversationAtom);
   const navigate = useNavigate();
+
+  const getUsersByIds = async (ids) => {
+    try {
+      const response = await fetch("/api/users/getUsersByIds", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ids }),
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching users by IDs:", error);
+      throw error;
+    }
+  };
+
+  const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
+  const [followings, setFollowings] = useState([]);
 
   const copyURL = () => {
     const currentURL = window.location.href;
@@ -41,6 +66,46 @@ const UserHeader = ({ user }) => {
       mock: true,
     });
     navigate("/chat");
+  };
+
+  const openFollowersModal = async () => {
+    try {
+      const followersData = await getUsersByIds(user.followers);
+      setFollowers(followersData);
+      setIsFollowersModalOpen(true);
+    } catch (error) {
+      toast({
+        title: "Error.",
+        status: "error",
+        description: "Failed to fetch followers.",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const closeFollowersModal = () => {
+    setIsFollowersModalOpen(false);
+  };
+
+  const openFollowingModal = async () => {
+    try {
+      const followingsData = await getUsersByIds(user.following);
+      setFollowings(followingsData);
+      setIsFollowingModalOpen(true);
+    } catch (error) {
+      toast({
+        title: "Error.",
+        status: "error",
+        description: "Failed to fetch followings.",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const closeFollowingModal = () => {
+    setIsFollowingModalOpen(false);
   };
 
   return (
@@ -95,7 +160,7 @@ const UserHeader = ({ user }) => {
         </Link>
       )}
       {currentUser?._id !== user._id && (
-        <Flex gap={2}>
+        <>
           <Button
             size={"sm"}
             onClick={handleFollowUnfollow}
@@ -108,13 +173,25 @@ const UserHeader = ({ user }) => {
               Message
             </Button>
           )}
-        </Flex>
+        </>
       )}
       <Flex w={"full"} justifyContent={"space-between"}>
         <Flex gap={2} alignItems={"center"}>
-          <Text color={"gray.light"}>{user.followers.length} followers</Text>
+          <Text
+            color={"gray.light"}
+            cursor="pointer"
+            onClick={openFollowersModal}
+          >
+            {user.followers.length} Followers
+          </Text>
           <Box w="1" h="1" bg={"gray.light"} borderRadius={"full"}></Box>
-          <Link color={"gray.light"}>instagram.com</Link>
+          <Text
+            color={"gray.light"}
+            cursor="pointer"
+            onClick={openFollowingModal}
+          >
+            {user.following.length} Following
+          </Text>
         </Flex>
         <Flex>
           <Box className="icon-container">
@@ -158,6 +235,17 @@ const UserHeader = ({ user }) => {
           <Text fontWeight={"bold"}> Replies</Text>
         </Flex>
       </Flex>
+
+      <FollowersModal
+        isOpen={isFollowersModalOpen}
+        onClose={closeFollowersModal}
+        followers={followers}
+      />
+      <FollowingModal
+        isOpen={isFollowingModalOpen}
+        onClose={closeFollowingModal}
+        followings={followings}
+      />
     </VStack>
   );
 };
