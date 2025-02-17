@@ -8,6 +8,15 @@ import useGetUserProfile from "../hooks/useGetUserProfile";
 import { useRecoilState } from "recoil";
 import postsAtom from "../atoms/postsAtom";
 
+import {
+  Text,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from "@chakra-ui/react";
+
 const UserPage = () => {
   const { user, loading } = useGetUserProfile();
   const { username } = useParams();
@@ -49,16 +58,49 @@ const UserPage = () => {
     <>
       <UserHeader user={user} />
 
-      {!fetchingPosts && posts.length === 0 && <h1>User has not posted.</h1>}
-      {fetchingPosts && (
-        <Flex justifyContent={"center"} my={12}>
-          <Spinner size={"xl"} />
-        </Flex>
-      )}
+      <Tabs>
+        <TabList>
+          <Tab
+            flex={1}
+            borderBottom={"1.5px solid"}
+            justifyContent={"center"}
+            pb="3"
+            cursor={"pointer"}
+            _selected={{ color: "white", borderColor: "white" }}
+            color={"gray.light"}
+          >
+            <Text fontWeight={"bold"}>Threads</Text>
+          </Tab>
+          <Tab
+            flex={1}
+            borderBottom={"1.5px solid"}
+            justifyContent={"center"}
+            pb="3"
+            cursor={"pointer"}
+            _selected={{ color: "white", borderColor: "white" }}
+            color={"gray.light"}
+          >
+            <Text fontWeight={"bold"}>Replies</Text>
+          </Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>
+            {!fetchingPosts && posts.length === 0 && (
+              <h1>User has not posted.</h1>
+            )}
+            {fetchingPosts && (
+              <Flex justifyContent={"center"} my={12}>
+                <Spinner size={"xl"} />
+              </Flex>
+            )}
 
-      {posts.map((post) => (
-        <Post key={post._id} post={post} postedBy={post.postedBy} />
-      ))}
+            {posts.map((post) => (
+              <Post key={post._id} post={post} postedBy={post.postedBy} />
+            ))}
+          </TabPanel>
+          <TabPanel>2</TabPanel>
+        </TabPanels>
+      </Tabs>
     </>
   );
 };

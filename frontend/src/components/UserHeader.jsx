@@ -214,7 +214,7 @@ const UserHeader = ({ user }) => {
         </Flex>
       </Flex>
 
-      <Flex w={"full"}>
+      {/* <Flex w={"full"}>
         <Flex
           flex={1}
           borderBottom={"1.5px solid white"}
@@ -234,7 +234,7 @@ const UserHeader = ({ user }) => {
         >
           <Text fontWeight={"bold"}> Replies</Text>
         </Flex>
-      </Flex>
+      </Flex> */}
 
       <FollowersModal
         isOpen={isFollowersModalOpen}
