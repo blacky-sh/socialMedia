@@ -23,18 +23,25 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
         <ModalCloseButton />
         <ModalBody>
           <VStack spacing={4} align="start">
-            {followers.map((follower) => (
-              <Flex key={follower._id} align="center" w="full">
-                <Avatar name={follower.username} src={follower.profilePic} />
-                <Flex align="start" ml={4} justify="space-between" w="full">
-                  <Text fontWeight="bold">
-                    <RouterLink to={`/${follower.username}`} onClick={onClose}>
-                      {follower.name} <br />@{follower.username}
-                    </RouterLink>
-                  </Text>
+            {followers.length == 0 ? (
+              <Text>User Doesn't have any followers! </Text>
+            ) : (
+              followers.map((follower) => (
+                <Flex key={follower._id} align="center" w="full">
+                  <Avatar name={follower.username} src={follower.profilePic} />
+                  <Flex align="start" ml={4} justify="space-between" w="full">
+                    <Text fontWeight="bold">
+                      <RouterLink
+                        to={`/${follower.username}`}
+                        onClick={onClose}
+                      >
+                        {follower.name} <br />@{follower.username}
+                      </RouterLink>
+                    </Text>
+                  </Flex>
                 </Flex>
-              </Flex>
-            ))}
+              ))
+            )}
           </VStack>
         </ModalBody>
         <ModalFooter>
