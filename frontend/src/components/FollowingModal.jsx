@@ -11,12 +11,13 @@ import {
   Text,
   Avatar,
   Flex,
+  Divider,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 
 const FollowingModal = ({ isOpen, onClose, followings }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Following</ModalHeader>
@@ -24,25 +25,27 @@ const FollowingModal = ({ isOpen, onClose, followings }) => {
         <ModalBody>
           <VStack spacing={4} align="start">
             {followings.length == 0 ? (
-              <Text>User Doesn't follow anyone!</Text>
+              <Text>User Doesn&apos;t follow anyone!</Text>
             ) : (
               followings.map((following) => (
-                <Flex key={following._id} align="center" w="full">
-                  <Avatar
-                    name={following.username}
-                    src={following.profilePic}
-                  />
-                  <Flex align="start" ml={4} justify="space-between" w="full">
-                    <Text fontWeight="bold">
+                <>
+                  <Flex key={following._id} align="center" w="full">
+                    <Avatar
+                      name={following.username}
+                      src={following.profilePic}
+                    />
+                    <Flex align="start" ml={4} justify="space-between" w="full">
                       <RouterLink
                         to={`/${following.username}`}
                         onClick={onClose}
                       >
-                        {following.name} <br />@{following.username}
+                        <Text>{following.username}</Text>
+                        <Text fontWeight="bold">{following.name}</Text>
                       </RouterLink>
-                    </Text>
+                    </Flex>
                   </Flex>
-                </Flex>
+                  <Divider />
+                </>
               ))
             )}
           </VStack>

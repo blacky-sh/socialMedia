@@ -24,7 +24,7 @@ const FollowersModal = ({ isOpen, onClose, followers }) => {
         <ModalBody>
           <VStack spacing={4} align="start">
             {followers.length == 0 ? (
-              <Text>User Doesn't have any followers! </Text>
+              <Text>User Doesn&apos;t have any followers! </Text>
             ) : (
               followers.map((follower) => (
                 <Flex key={follower._id} align="center" w="full">
