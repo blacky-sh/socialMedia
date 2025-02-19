@@ -28,8 +28,8 @@ const FollowingModal = ({ isOpen, onClose, followings }) => {
               <Text>User Doesn&apos;t follow anyone!</Text>
             ) : (
               followings.map((following) => (
-                <>
-                  <Flex key={following._id} align="center" w="full">
+                <Flex key={following._id} direction="column" w="full" gap={2}>
+                  <Flex align="center" w="full">
                     <Avatar
                       name={following.username}
                       src={following.profilePic}
@@ -45,7 +45,7 @@ const FollowingModal = ({ isOpen, onClose, followings }) => {
                     </Flex>
                   </Flex>
                   <Divider />
-                </>
+                </Flex>
               ))
             )}
           </VStack>
