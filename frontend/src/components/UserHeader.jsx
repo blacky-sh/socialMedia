@@ -3,7 +3,7 @@ import { Box, Flex, Link, Text, VStack } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import { Portal } from "@chakra-ui/portal";
 import { Button, useToast } from "@chakra-ui/react";
-import { BsInstagram } from "react-icons/bs";
+// import { BsInstagram } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
@@ -194,19 +194,18 @@ const UserHeader = ({ user }) => {
           </Text>
         </Flex>
         <Flex>
-          <Box className="icon-container">
+          {/* <Box className="icon-container">
             <BsInstagram size={24} cursor={"pointer"} />
-          </Box>
+          </Box> */}
           <Box className="icon-container">
             <Menu>
               <MenuButton>
                 <CgMoreO size={24} cursor={"pointer"} />
               </MenuButton>
               <Portal>
-                <MenuList bg={"gray.dark"}>
-                  <MenuItem bg={"gray.dark"} onClick={copyURL}>
-                    Copy link
-                  </MenuItem>
+                <MenuList>
+                  <MenuItem onClick={copyURL}>Copy link</MenuItem>
+                  <MenuItem onClick={copyURL}>Report User</MenuItem>
                 </MenuList>
               </Portal>
             </Menu>

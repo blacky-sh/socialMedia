@@ -69,7 +69,7 @@ const UserPage = () => {
             _selected={{ color: "white", borderColor: "white" }}
             color={"gray.light"}
           >
-            <Text fontWeight={"bold"}>Threads</Text>
+            <Text fontWeight={"bold"}>Posts</Text>
           </Tab>
           <Tab
             flex={1}
