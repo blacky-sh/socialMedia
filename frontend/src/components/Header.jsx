@@ -18,10 +18,10 @@ const Header = () => {
   const setAuthScreen = useSetRecoilState(authScreenAtom);
 
   return (
-    <Flex justifyContent={"space-between"} mt={6} mb="12">
+    <Flex justifyContent={"space-between"} mt={6} mb="12" alignItems={"center"}>
       {user && (
         <Link as={RouterLink} to="/">
-          <AiFillHome size={24} />
+          <AiFillHome size={"24"} />
         </Link>
       )}
       {!user && (
@@ -58,7 +58,7 @@ const Header = () => {
           <Link as={RouterLink} to={`/settings`}>
             <MdOutlineSettings size={20} />
           </Link>
-          <Button size={"xs"} onClick={logout}>
+          <Button size={"xs"} onClick={logout} variant="ghost">
             <FiLogOut size={20} />
           </Button>
         </Flex>

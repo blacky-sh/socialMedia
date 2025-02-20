@@ -1,6 +1,10 @@
 import Admin from "../models/adminModel.js";
+import User from "../models/userModel.js";
+import Post from "../models/postModel.js";
+import Report from "../models/reportModel.js";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from "cloudinary";
 
 const signupAdmin = async (req, res) => {
   try {
@@ -62,4 +66,106 @@ const logoutAdmin = (req, res) => {
   }
 };
 
-export { signupAdmin, loginAdmin, logoutAdmin };
+// View and manage all user accounts
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password");
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Review reported posts
+const getAllReportedPosts = async (req, res) => {
+  try {
+    const reports = await Report.find({
+      reportedPost: { $exists: true },
+    }).populate("reportedBy reportedPost");
+    res.status(200).json(reports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Take down posts
+const deletePost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (post.img) {
+      const imgId = post.img.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(imgId);
+    }
+
+    await Post.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// View all posts
+const getAllPosts = async (req, res) => {
+  try {
+    const posts = await Post.find().populate("postedBy");
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Review reported users
+const getAllReportedUsers = async (req, res) => {
+  try {
+    const reports = await Report.find({
+      reportedUser: { $exists: true },
+    }).populate("reportedBy reportedUser");
+    res.status(200).json(reports);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Ban users
+const banUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.isBanned = true;
+    await user.save();
+    res.status(200).json({ message: "User banned successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// View analytics dashboard
+const getDashboardStats = async (req, res) => {
+  try {
+    const userCount = await User.countDocuments();
+    const postCount = await Post.countDocuments();
+    const reportCount = await Report.countDocuments();
+    res.status(200).json({ userCount, postCount, reportCount });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export {
+  signupAdmin,
+  loginAdmin,
+  logoutAdmin,
+  getAllUsers,
+  getAllReportedPosts,
+  deletePost,
+  getAllPosts,
+  getAllReportedUsers,
+  banUser,
+  getDashboardStats,
+};

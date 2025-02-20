@@ -1,9 +1,20 @@
-import { Box, Flex, Heading, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Heading,
+  Text,
+  Button,
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboardPage = () => {
+  const navigate = useNavigate();
+
   return (
     <Flex
-      minH={"100vh"}
+      h={"93.3vh"}
+      w={"100%"}
       align={"center"}
       justify={"center"}
       bg={useColorModeValue("gray.50", "gray.800")}
@@ -20,11 +31,25 @@ const AdminDashboardPage = () => {
         <Heading fontSize={"2xl"} mb={4}>
           Admin Dashboard
         </Heading>
-        <Text>
+        <Text mb={4}>
           Welcome to the admin dashboard. Here you can manage users, review
           reports, and view analytics.
         </Text>
-        {/* Add more components and functionalities as needed */}
+        <Button onClick={() => navigate("/admin/users")} mb={2}>
+          Manage Users
+        </Button>
+        <Button onClick={() => navigate("/admin/reported-posts")} mb={2}>
+          Review Reported Posts
+        </Button>
+        <Button onClick={() => navigate("/admin/reported-users")} mb={2}>
+          Review Reported Users
+        </Button>
+        <Button onClick={() => navigate("/admin/posts")} mb={2}>
+          View All Posts
+        </Button>
+        <Button onClick={() => navigate("/admin/analytics")} mb={2}>
+          View Analytics Dashboard
+        </Button>
       </Box>
     </Flex>
   );
