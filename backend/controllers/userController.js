@@ -90,13 +90,6 @@ const loginUser = async (req, res) => {
       await user.save();
     }
 
-    if (user.isBanned) {
-      return res
-        .status(400)
-        .json({ error: "User is banned from the platform" });
-      navigate("/auth");
-    }
-
     generateTokenAndSetCookie(user._id, res);
 
     res.status(200).json({
