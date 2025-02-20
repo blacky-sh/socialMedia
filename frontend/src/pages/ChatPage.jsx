@@ -210,6 +210,7 @@ const ChatPage = () => {
             flex={50}
             borderRadius={"md"}
             p={2}
+            ml={4}
             flexDir={"column"}
             alignItems={"center"}
             justifyContent={"center"}
