@@ -45,6 +45,22 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isBanned: {
+      type: Boolean,
+      default: false,
+    },
+    banExpires: {
+      type: Date,
+      default: null,
+    },
+    isRestrictedFromPosting: {
+      type: Boolean,
+      default: false,
+    },
+    postRestrictionExpires: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
