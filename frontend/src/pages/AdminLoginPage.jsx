@@ -68,7 +68,7 @@ const AdminLoginPage = () => {
         </Stack>
         <Box
           rounded={"lg"}
-          bg={useColorModeValue("gray.100", "gray.700")}
+          bg={useColorModeValue("gray.100", "gray.light")}
           boxShadow={"lg"}
           p={8}
         >
@@ -91,10 +91,10 @@ const AdminLoginPage = () => {
             </FormControl>
             <Stack spacing={10}>
               <Button
-                bg={useColorModeValue("gray.600", "gray.800")}
+                bg={useColorModeValue("gray.100", "gray.dark")}
                 color={"white"}
                 _hover={{
-                  bg: useColorModeValue("gray.700", "gray.600"),
+                  bg: useColorModeValue("gray.700", "gray.700"),
                 }}
                 onClick={handleLogin}
                 isLoading={loading}

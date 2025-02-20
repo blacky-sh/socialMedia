@@ -56,17 +56,16 @@ const AdminUsersPage = () => {
 
   return (
     <Flex
-      minH={"100vh"}
       w={"100%"}
       align={"center"}
       justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
+      bg={useColorModeValue("white", "gray.dark")}
       p={8}
     >
       <Box
         w={"full"}
         maxW={"100%"}
-        bg={useColorModeValue("white", "gray.700")}
+        bg={useColorModeValue("gray.100", "gray.light")}
         boxShadow={"lg"}
         rounded={"lg"}
         p={8}
@@ -74,6 +73,7 @@ const AdminUsersPage = () => {
         <Heading fontSize={"2xl"} mb={4}>
           Manage Users
         </Heading>
+
         <Table variant="simple">
           <Thead>
             <Tr>
@@ -91,6 +91,7 @@ const AdminUsersPage = () => {
                 <Td>{user.isBanned ? "Banned" : "Active"}</Td>
                 <Td>
                   <Button
+                    bg={useColorModeValue("gray.light", "gray.dark")}
                     onClick={() => handleBanUser(user._id, user.isBanned)}
                   >
                     {user.isBanned ? "Unban" : "Ban"}

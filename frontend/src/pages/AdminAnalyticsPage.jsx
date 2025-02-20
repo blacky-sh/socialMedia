@@ -19,17 +19,16 @@ const AdminAnalyticsPage = () => {
 
   return (
     <Flex
-      minH={"100vh"}
       w={"full"}
       align={"center"}
       justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
+      bg={useColorModeValue("white", "gray.dark")}
       p={8}
     >
       <Box
         w={"full"}
         maxW={"1200px"}
-        bg={useColorModeValue("white", "gray.700")}
+        bg={useColorModeValue("gray.100", "gray.light")}
         boxShadow={"lg"}
         rounded={"lg"}
         p={8}
