@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import { FiLogOut } from "react-icons/fi";
 
 const AdminHeader = () => {
   const navigate = useNavigate();
@@ -20,9 +21,20 @@ const AdminHeader = () => {
   };
 
   return (
-    <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+    <Box
+      bg={useColorModeValue("white", "gray.dark")}
+      px={4}
+      my={2}
+      borderRadius={8}
+    >
       <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
-        <Heading size="md">Admin Panel</Heading>
+        <Heading
+          size="md"
+          cursor={"pointer"}
+          onClick={() => navigate("/admin/dashboard")}
+        >
+          Admin Panel
+        </Heading>
         <Flex alignItems={"center"}>
           <IconButton
             size="md"
@@ -34,15 +46,9 @@ const AdminHeader = () => {
             color="current"
             onClick={toggleColorMode}
             icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-            mr={4}
           />
-          <Button
-            variant={"solid"}
-            colorScheme={"teal"}
-            size={"sm"}
-            onClick={handleLogout}
-          >
-            Logout
+          <Button size={"md"} variant={"ghost"} onClick={handleLogout}>
+            <FiLogOut size={20} />
           </Button>
         </Flex>
       </Flex>

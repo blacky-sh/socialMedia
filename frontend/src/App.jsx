@@ -12,21 +12,24 @@ import CreatePost from "./components/CreatePost";
 import ChatPage from "./pages/ChatPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import AdminAnalyticsPage from "./pages/AdminAnalyticsPage";
+import AdminPostsPage from "./pages/AdminPostsPage";
+import AdminReportedUsersPage from "./pages/AdminReportedUsersPage";
+import AdminUsersPage from "./pages/AdminUsersPage";
+import AdminReportedPostsPage from "./pages/AdminReportedPostsPage";
 import AdminHeader from "./components/AdminHeader";
-import ProtectedAdminRoute from "./components/ProtectedAdminRoute";
 import { SettingsPage } from "./pages/SettingsPage";
 
 function App() {
   const user = useRecoilValue(userAtom);
+  const admin = JSON.parse(localStorage.getItem("admin"));
   const { pathname } = useLocation();
 
   const isAdminRoute = pathname.startsWith("/admin");
 
   return (
     <Box position={"relative"} w="full">
-      <Container
-        maxW={pathname === "/" ? { base: "620px", md: "900px" } : "620px"}
-      >
+      <Container maxW={{ base: "620px", md: "900px" }}>
         {isAdminRoute ? <AdminHeader /> : <Header />}
 
         <Routes>
@@ -70,9 +73,37 @@ function App() {
           <Route
             path="/admin/dashboard"
             element={
-              <ProtectedAdminRoute>
-                <AdminDashboardPage />
-              </ProtectedAdminRoute>
+              admin ? <AdminDashboardPage /> : <Navigate to={"/admin"} />
+            }
+          />
+          <Route
+            path="/admin/analytics"
+            element={
+              admin ? <AdminAnalyticsPage /> : <Navigate to={"/admin"} />
+            }
+          />
+          <Route
+            path="/admin/posts"
+            element={admin ? <AdminPostsPage /> : <Navigate to={"/admin"} />}
+          />
+          <Route
+            path="/admin/reported-users"
+            element={
+              admin ? <AdminReportedUsersPage /> : <Navigate to={"/admin"} />
+            }
+          />
+          <Route
+            path="/admin/posts"
+            element={admin ? <AdminPostsPage /> : <Navigate to={"/admin"} />}
+          />
+          <Route
+            path="/admin/users"
+            element={admin ? <AdminUsersPage /> : <Navigate to={"/admin"} />}
+          />
+          <Route
+            path="/admin/reported-posts"
+            element={
+              admin ? <AdminReportedPostsPage /> : <Navigate to={"/admin"} />
             }
           />
         </Routes>

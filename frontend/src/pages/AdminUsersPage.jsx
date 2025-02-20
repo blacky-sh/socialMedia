@@ -11,9 +11,11 @@ import {
   Tr,
   Button,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 
 const AdminUsersPage = () => {
+  const toast = useToast();
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -25,15 +27,31 @@ const AdminUsersPage = () => {
     fetchUsers();
   }, []);
 
-  const handleBanUser = async (userId) => {
-    await fetch(`/api/admin/ban-user/${userId}`, {
-      method: "PUT",
-    });
+  const handleBanUser = async (userId, isBanned) => {
+    const method = isBanned ? "DELETE" : "PUT"; // Use DELETE to unban, PUT to ban
+    await fetch(
+      `/api/admin/${isBanned ? "unban-user" : "ban-user"}/${userId}`,
+      {
+        method: method,
+      }
+    );
+
     setUsers(
       users.map((user) =>
-        user._id === userId ? { ...user, isBanned: true } : user
+        user._id === userId ? { ...user, isBanned: !isBanned } : user
       )
     );
+
+    // Show success toast
+    toast({
+      title: `User ${isBanned ? "Unbanned" : "Banned"}`,
+      description: `User ${userId} has been ${
+        isBanned ? "unbanned" : "banned"
+      } successfully.`,
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   return (
@@ -73,10 +91,9 @@ const AdminUsersPage = () => {
                 <Td>{user.isBanned ? "Banned" : "Active"}</Td>
                 <Td>
                   <Button
-                    onClick={() => handleBanUser(user._id)}
-                    disabled={user.isBanned}
+                    onClick={() => handleBanUser(user._id, user.isBanned)}
                   >
-                    {user.isBanned ? "Banned" : "Ban"}
+                    {user.isBanned ? "Unban" : "Ban"}
                   </Button>
                 </Td>
               </Tr>

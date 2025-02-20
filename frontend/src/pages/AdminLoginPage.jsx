@@ -58,10 +58,9 @@ const AdminLoginPage = () => {
 
   return (
     <Flex
-      minH={"100vh"}
       align={"center"}
       justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
+      bg={useColorModeValue("white", "gray.dark")}
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
@@ -69,7 +68,7 @@ const AdminLoginPage = () => {
         </Stack>
         <Box
           rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
+          bg={useColorModeValue("gray.100", "gray.700")}
           boxShadow={"lg"}
           p={8}
         >
@@ -92,10 +91,10 @@ const AdminLoginPage = () => {
             </FormControl>
             <Stack spacing={10}>
               <Button
-                bg={useColorModeValue("gray.600", "gray.700")}
+                bg={useColorModeValue("gray.600", "gray.800")}
                 color={"white"}
                 _hover={{
-                  bg: useColorModeValue("gray.700", "gray.800"),
+                  bg: useColorModeValue("gray.700", "gray.600"),
                 }}
                 onClick={handleLogin}
                 isLoading={loading}
