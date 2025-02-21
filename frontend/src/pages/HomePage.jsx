@@ -11,6 +11,7 @@ const HomePage = () => {
   const [posts, setPosts] = useRecoilState(postsAtom);
   const [loading, setLoading] = useState(true);
   const showToast = useShowToast();
+
   useEffect(() => {
     const getFeedPosts = async () => {
       setLoading(true);
@@ -31,6 +32,10 @@ const HomePage = () => {
     };
     getFeedPosts();
   }, [showToast, setPosts]);
+
+  const handlePostCreated = (newPost) => {
+    setPosts((prevPosts) => [newPost, ...prevPosts]);
+  };
 
   return (
     <Flex gap="10" alignItems={"flex-start"}>
@@ -58,7 +63,7 @@ const HomePage = () => {
       >
         <SuggestedUsers />
       </Box>
-      <CreatePost />
+      <CreatePost onPostCreated={handlePostCreated} />
     </Flex>
   );
 };

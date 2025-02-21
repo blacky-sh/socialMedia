@@ -23,15 +23,13 @@ import {
 import { useRef, useState } from "react";
 import usePreviewImg from "../hooks/usePreviewImg";
 import { BsFillImageFill } from "react-icons/bs";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
-import postsAtom from "../atoms/postsAtom";
-import { useParams } from "react-router-dom";
 
 const MAX_CHAR = 500;
 
-const CreatePost = () => {
+const CreatePost = ({ onPostCreated }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [postText, setPostText] = useState("");
   const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
@@ -43,8 +41,6 @@ const CreatePost = () => {
   const user = useRecoilValue(userAtom);
   const showToast = useShowToast();
   const [loading, setLoading] = useState(false);
-  const [posts, setPosts] = useRecoilState(postsAtom);
-  const { username } = useParams();
 
   const handleTextChange = (e) => {
     const inputText = e.target.value;
@@ -82,9 +78,7 @@ const CreatePost = () => {
         return;
       }
       showToast("Success", "Post created successfully", "success");
-      if (username === user.username) {
-        setPosts([data, ...posts]);
-      }
+      onPostCreated(data); // Call the callback function with the new post data
       onClose();
       setPostText("");
       setImgUrl("");
@@ -134,7 +128,7 @@ const CreatePost = () => {
               </Text>
 
               <Flex alignItems="center" mb={4}>
-                <Text mr={2}>lost item?</Text>
+                <Text mr={2}>Is this a lost item post?</Text>
                 <Switch
                   isChecked={isLostItem}
                   onChange={(e) => setIsLostItem(e.target.checked)}
@@ -147,7 +141,7 @@ const CreatePost = () => {
                     placeholder="Select category"
                     onChange={(e) => setCategory(e.target.value)}
                     value={category}
-                    mt={4}
+                    mb={4}
                   >
                     <option value="Lost">Lost</option>
                     <option value="Stolen">Stolen</option>
@@ -157,13 +151,14 @@ const CreatePost = () => {
                     placeholder="Select property type"
                     onChange={(e) => setPropertyType(e.target.value)}
                     value={propertyType}
-                    my={4}
+                    mb={4}
                   >
                     <option value="Electronics">Electronics</option>
                     <option value="Jewelry">Jewelry</option>
                     <option value="Documents">Documents</option>
                     <option value="Person">Person</option>
                     <option value="Vehicle">Vehicle</option>
+                    <option value="Pet">Pet</option>
                     <option value="Other">Other</option>
                   </Select>
                 </>
@@ -184,7 +179,7 @@ const CreatePost = () => {
             </FormControl>
 
             {imgUrl && (
-              <Flex mt={5} w={"full"} position={"relative"}>
+              <Flex mt={5} w={"full"} position={""}>
                 <Image src={imgUrl} alt="Selected img" />
                 <CloseButton
                   onClick={() => {

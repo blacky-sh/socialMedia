@@ -41,12 +41,14 @@ const postSchema = mongoose.Schema(
     ],
     category: {
       type: String,
-      // enum: ["Lost", "Stolen"],
-      // required: true,
+      enum: ["Lost", "Stolen"],
     },
     propertyType: {
       type: String,
-      // required: true,
+    },
+    found: {
+      type: Boolean,
+      default: false,
     },
   },
   {
