@@ -1,6 +1,6 @@
 import { Avatar } from "@chakra-ui/avatar";
 import { Image } from "@chakra-ui/image";
-import { Box, Flex, Text } from "@chakra-ui/layout";
+import { Box, Flex, Text, Badge } from "@chakra-ui/layout";
 import { Link, useNavigate } from "react-router-dom";
 import Actions from "./Actions";
 import { useEffect, useState } from "react";
@@ -24,7 +24,6 @@ const Post = ({ post, postedBy }) => {
         const res = await fetch("/api/users/profile/" + postedBy);
         const data = await res.json();
         if (data.error) {
-          //   console.log(postedBy, data.error);
           showToast("Error", data.error, "error");
           return;
         }
@@ -86,30 +85,6 @@ const Post = ({ post, postedBy }) => {
                 padding={"2px"}
               />
             )}
-
-            {post.replies[1] && (
-              <Avatar
-                size="xs"
-                name="John doe"
-                src={post.replies[1].userProfilePic}
-                position={"absolute"}
-                bottom={"0px"}
-                right="-5px"
-                padding={"2px"}
-              />
-            )}
-
-            {post.replies[2] && (
-              <Avatar
-                size="xs"
-                name="John doe"
-                src={post.replies[2].userProfilePic}
-                position={"absolute"}
-                bottom={"0px"}
-                left="4px"
-                padding={"2px"}
-              />
-            )}
           </Box>
         </Flex>
         <Flex flex={1} flexDirection={"column"} gap={2}>
@@ -125,24 +100,26 @@ const Post = ({ post, postedBy }) => {
               >
                 {user?.username}
               </Text>
-              <Image src="/verified.png" w={4} h={4} ml={1} />
+              {post.category && (
+                <Badge ml={2} px={4} py={1} colorScheme="blue">
+                  {post.category}
+                </Badge>
+              )}
+              {post.propertyType && (
+                <Badge ml={2} px={4} py={1} colorScheme="green">
+                  {post.propertyType}
+                </Badge>
+              )}
             </Flex>
             <Flex gap={4} alignItems={"center"}>
-              <Text
-                fontSize={"xs"}
-                width={36}
-                textAlign={"right"}
-                color={"gray.light"}
-              >
+              <Text fontSize={"xs"} color={"gray.light"}>
                 {formatDistanceToNow(new Date(post.createdAt))} ago
               </Text>
-
               {currentUser?._id === user._id && (
                 <DeleteIcon size={20} onClick={handleDeletePost} />
               )}
             </Flex>
           </Flex>
-
           <Text fontSize={"sm"}>{post.text}</Text>
           {post.img && (
             <Box
@@ -154,7 +131,6 @@ const Post = ({ post, postedBy }) => {
               <Image src={post.img} w={"full"} />
             </Box>
           )}
-
           <Flex gap={3} my={1}>
             <Actions post={post} />
           </Flex>

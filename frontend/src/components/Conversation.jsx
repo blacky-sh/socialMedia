@@ -1,7 +1,6 @@
 import {
   Avatar,
   AvatarBadge,
-  Box,
   Flex,
   Image,
   Stack,
@@ -70,7 +69,10 @@ const Conversation = ({ conversation, isOnline }) => {
       <Stack direction={"column"} fontSize={"sm"} w={"100%"}>
         <Flex justifyContent={"space-between"}>
           <Text fontWeight="700" display={"flex"} alignItems={"center"}>
-            {user.username} <Image src="/verified.png" w={4} h={4} ml={1} />
+            {user.username}{" "}
+            {user.isVerified && (
+              <Image src="/verified.png" w={4} h={4} ml={1} />
+            )}
           </Text>
           <Text fontSize={"xs"}>
             {formatDistanceToNow(new Date(conversation.updatedAt))} ago
@@ -79,9 +81,7 @@ const Conversation = ({ conversation, isOnline }) => {
 
         <Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
           {currentUser._id === lastMessage.sender ? (
-            <Box color={lastMessage.seen ? "blue.400" : ""}>
-              <BsCheck2All size={16} />
-            </Box>
+            <BsCheck2All color={lastMessage.seen ? "blue.400" : ""} size={16} />
           ) : (
             ""
           )}

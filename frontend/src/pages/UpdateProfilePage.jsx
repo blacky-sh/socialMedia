@@ -128,6 +128,7 @@ export default function UpdateProfilePage() {
               onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
               _placeholder={{ color: "gray.500" }}
               type="email"
+              disabled
             />
           </FormControl>
           <FormControl>
@@ -140,7 +141,7 @@ export default function UpdateProfilePage() {
               type="text"
             />
           </FormControl>
-          <FormControl>
+          {/* <FormControl>
             <FormLabel>Password</FormLabel>
             <Input
               placeholder="password"
@@ -151,7 +152,7 @@ export default function UpdateProfilePage() {
               _placeholder={{ color: "gray.500" }}
               type="password"
             />
-          </FormControl>
+          </FormControl> */}
           <Stack spacing={6} direction={["column", "row"]}>
             <Button
               onClick={() => navigate(`/${user.username}`)}

@@ -4,13 +4,13 @@ import { v2 as cloudinary } from "cloudinary";
 
 const createPost = async (req, res) => {
   try {
-    const { postedBy, text } = req.body;
+    const { postedBy, text, category, propertyType } = req.body;
     let { img } = req.body;
 
     if (!postedBy || !text) {
-      return res
-        .status(400)
-        .json({ error: "Postedby and text fields are required" });
+      return res.status(400).json({
+        error: "PostedBy, and text fields are required",
+      });
     }
 
     const user = await User.findById(postedBy);
@@ -34,7 +34,7 @@ const createPost = async (req, res) => {
       img = uploadedResponse.secure_url;
     }
 
-    const newPost = new Post({ postedBy, text, img });
+    const newPost = new Post({ postedBy, text, img, category, propertyType });
     await newPost.save();
 
     res.status(201).json(newPost);

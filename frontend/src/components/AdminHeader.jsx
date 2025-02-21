@@ -22,7 +22,7 @@ const AdminHeader = () => {
 
   return (
     <Box
-      bg={useColorModeValue("white", "gray.dark")}
+      bg={useColorModeValue("gray.100", "black.100")}
       px={4}
       my={2}
       borderRadius={8}

@@ -57,20 +57,22 @@ const AdminLoginPage = () => {
   };
 
   return (
-    <Flex
-      align={"center"}
-      justify={"center"}
-      bg={useColorModeValue("white", "gray.dark")}
-    >
+    <Flex align={"center"} justify={"center"}>
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"}>Admin Login</Heading>
+          <Heading fontSize={"4xl"} textAlign={"center"}>
+            Login
+          </Heading>
         </Stack>
         <Box
           rounded={"lg"}
-          bg={useColorModeValue("gray.100", "gray.light")}
+          bg={useColorModeValue("white", "gray.dark")}
           boxShadow={"lg"}
           p={8}
+          w={{
+            base: "full",
+            sm: "400px",
+          }}
         >
           <Stack spacing={4}>
             <FormControl id="username" isRequired>

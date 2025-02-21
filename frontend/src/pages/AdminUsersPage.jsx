@@ -59,13 +59,13 @@ const AdminUsersPage = () => {
       w={"100%"}
       align={"center"}
       justify={"center"}
-      bg={useColorModeValue("white", "gray.dark")}
+      bg={useColorModeValue("gray.100", "black.100")}
       p={8}
     >
       <Box
         w={"full"}
         maxW={"100%"}
-        bg={useColorModeValue("gray.100", "gray.light")}
+        bg={useColorModeValue("white", "gray.dark")}
         boxShadow={"lg"}
         rounded={"lg"}
         p={8}
