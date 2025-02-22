@@ -11,27 +11,75 @@ import {
   Heading,
   Text,
   useColorModeValue,
-  Link,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
-import authScreenAtom from "../atoms/authAtom";
 import useShowToast from "../hooks/useShowToast";
 import userAtom from "../atoms/userAtom";
 
 export default function SignupCard() {
-  const setAuthScreen = useSetRecoilState(authScreenAtom);
   const [inputs, setInputs] = useState({
     name: "",
     username: "",
     email: "",
     password: "",
   });
-
+  const [passwordError, setPasswordError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const showToast = useShowToast();
   const setUser = useSetRecoilState(userAtom);
 
+  const validatePassword = (password) => {
+    if (password.length < 8) {
+      return "Password must be at least 8 characters long.";
+    }
+    if (password == inputs.email) {
+      return "Password cannot be similar to email.";
+    }
+    if (password == inputs.username) {
+      return "Password cannot be similar to username.";
+    }
+    return "";
+  };
+
+  const handlePasswordChange = (e) => {
+    const password = e.target.value;
+    setInputs({ ...inputs, password });
+    const error = validatePassword(password);
+    setPasswordError(error);
+  };
+
+  const checkUsernameAvailability = async (username) => {
+    try {
+      const res = await fetch(`/api/users/profile/${username}`);
+      const data = await res.json();
+      if (data._id) {
+        setUsernameError("Username is already taken.");
+      } else {
+        setUsernameError("");
+      }
+    } catch (error) {
+      setUsernameError("Error checking username availability.");
+    }
+  };
+
+  const handleUsernameChange = (e) => {
+    const username = e.target.value;
+    setInputs({ ...inputs, username });
+
+    if (username.length < 3) {
+      setUsernameError("Username must be at least 3 characters long.");
+    } else {
+      setUsernameError("");
+      checkUsernameAvailability(username);
+    }
+  };
+
   const handleSignup = async () => {
+    if (passwordError || usernameError) {
+      showToast("Error", passwordError || usernameError, "error");
+      return;
+    }
     try {
       const res = await fetch("/api/users/signup", {
         method: "POST",
@@ -87,11 +135,14 @@ export default function SignupCard() {
                   <FormLabel>Username</FormLabel>
                   <Input
                     type="text"
-                    onChange={(e) =>
-                      setInputs({ ...inputs, username: e.target.value })
-                    }
+                    onChange={handleUsernameChange}
                     value={inputs.username}
                   />
+                  {usernameError && (
+                    <Text color="red.500" fontSize="sm" position={"absolute"}>
+                      {usernameError}
+                    </Text>
+                  )}
                 </FormControl>
               </Box>
             </HStack>
@@ -110,12 +161,15 @@ export default function SignupCard() {
               <InputGroup>
                 <Input
                   type={"password"}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, password: e.target.value })
-                  }
+                  onChange={handlePasswordChange}
                   value={inputs.password}
                 />
               </InputGroup>
+              {passwordError && (
+                <Text color="red.500" fontSize="sm">
+                  {passwordError}
+                </Text>
+              )}
             </FormControl>
             <Stack spacing={10} pt={2}>
               <Button
@@ -130,14 +184,6 @@ export default function SignupCard() {
               >
                 Sign up
               </Button>
-            </Stack>
-            <Stack pt={6}>
-              <Text align={"center"}>
-                Already a user?{" "}
-                <Link color={"blue.400"} onClick={() => setAuthScreen("login")}>
-                  Login
-                </Link>
-              </Text>
             </Stack>
           </Stack>
         </Box>

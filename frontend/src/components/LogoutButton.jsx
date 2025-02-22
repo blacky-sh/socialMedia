@@ -26,13 +26,14 @@ const LogoutButton = () => {
         return; // Stop here if there's an error
       }
 
+      // Clear the user from localStorage and Recoil state
       localStorage.removeItem("user-threads");
       setUser(null);
-
-      // Redirect on the CLIENT-SIDE:
-      navigate("/auth"); // Now this is correct!
     } catch (error) {
       showToast("Error", error, "error");
+    } finally {
+      // Always redirect to the login page
+      navigate("/auth");
     }
   };
   return (
