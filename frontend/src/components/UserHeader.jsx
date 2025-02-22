@@ -14,6 +14,7 @@ import { useSetRecoilState } from "recoil";
 import { useState } from "react";
 import FollowersModal from "./FollowersModal";
 import FollowingModal from "./FollowingModal";
+import ProfilePictureModal from "./ProfilePictureModal";
 
 const UserHeader = ({ user }) => {
   const toast = useToast();
@@ -43,6 +44,8 @@ const UserHeader = ({ user }) => {
   const [followers, setFollowers] = useState([]);
   const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
   const [followings, setFollowings] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState("");
 
   const copyURL = () => {
     const currentURL = window.location.href;
@@ -108,6 +111,13 @@ const UserHeader = ({ user }) => {
     setIsFollowingModalOpen(false);
   };
 
+  const handleProfilePictureClick = () => {
+    if (user.profilePic) {
+      setSelectedImage(user.profilePic);
+      setIsModalOpen(true);
+    }
+  };
+
   return (
     <VStack gap={4} alignItems={"start"}>
       <Flex justifyContent={"space-between"} w={"full"}>
@@ -137,6 +147,8 @@ const UserHeader = ({ user }) => {
                 base: "md",
                 md: "xl",
               }}
+              onClick={handleProfilePictureClick}
+              cursor="pointer"
             />
           )}
           {!user.profilePic && (
@@ -243,6 +255,11 @@ const UserHeader = ({ user }) => {
         isOpen={isFollowingModalOpen}
         onClose={closeFollowingModal}
         followings={followings}
+      />
+      <ProfilePictureModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        imgUrl={selectedImage}
       />
     </VStack>
   );

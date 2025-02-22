@@ -112,7 +112,7 @@ const likeUnlikePost = async (req, res) => {
 
 const replyToPost = async (req, res) => {
   try {
-    const { text } = req.body;
+    const { text, createdAt } = req.body;
     const postId = req.params.id;
     const userId = req.user._id;
     const userProfilePic = req.user.profilePic;
@@ -127,7 +127,7 @@ const replyToPost = async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    const reply = { userId, text, userProfilePic, username };
+    const reply = { userId, text, userProfilePic, username, createdAt };
 
     post.replies.push(reply);
     await post.save();

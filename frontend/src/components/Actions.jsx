@@ -92,7 +92,7 @@ const Actions = ({ post }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text: reply }),
+        body: JSON.stringify({ text: reply, createdAt: new Date() }),
       });
       const data = await res.json();
       if (data.error) return showToast("Error", data.error, "error");
@@ -116,7 +116,12 @@ const Actions = ({ post }) => {
 
   return (
     <Flex flexDirection="column">
-      <Flex gap={3} my={2} onClick={(e) => e.preventDefault()}>
+      <Flex
+        gap={3}
+        my={2}
+        onClick={(e) => e.preventDefault()}
+        cursor={"pointer"}
+      >
         <svg
           aria-label="Like"
           color={liked ? "rgb(237, 73, 86)" : ""}
