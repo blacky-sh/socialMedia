@@ -45,7 +45,6 @@ const postSchema = mongoose.Schema(
     ],
     category: {
       type: String,
-      enum: ["Lost", "Stolen"],
     },
     propertyType: {
       type: String,
