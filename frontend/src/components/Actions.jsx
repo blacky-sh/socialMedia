@@ -14,7 +14,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
@@ -27,9 +27,28 @@ const Actions = ({ post }) => {
   const [isLiking, setIsLiking] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const [reply, setReply] = useState("");
+  const [username, setUsername] = useState("");
 
   const showToast = useShowToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const res = await fetch(`/api/users/profile/${post.postedBy}`);
+        const data = await res.json();
+        if (data.error) {
+          showToast("Error", data.error, "error");
+        } else {
+          setUsername(data.username);
+        }
+      } catch (error) {
+        showToast("Error", error.message, "error");
+      }
+    };
+
+    getProfile();
+  }, [post.postedBy, showToast]);
 
   const handleLikeAndUnlike = async () => {
     if (!user)
@@ -114,6 +133,15 @@ const Actions = ({ post }) => {
     }
   };
 
+  const handleShareClick = () => {
+    const postUrl =
+      window.location.href == "https://noor-w1zp.onrender.com/"
+        ? `${window.location.href}${username}/post/${post._id}`
+        : window.location.href;
+    navigator.clipboard.writeText(postUrl);
+    showToast("Success", "Link copied to clipboard", "success");
+  };
+
   return (
     <Flex flexDirection="column">
       <Flex
@@ -160,7 +188,15 @@ const Actions = ({ post }) => {
         </svg>
 
         {/* <RepostSVG /> */}
-        <ShareSVG />
+        <Button
+          mt={-2}
+          ml={-4}
+          variant="ghost"
+          _hover={{ bg: "transparent" }}
+          onClick={handleShareClick} // Update the click handler
+        >
+          <ShareSVG />
+        </Button>
       </Flex>
 
       <Flex gap={2} alignItems={"center"}>
