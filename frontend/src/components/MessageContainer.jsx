@@ -140,6 +140,8 @@ const MessageContainer = () => {
       borderRadius={"md"}
       p={2}
       flexDirection={"column"}
+      h={"100%"}
+      mt={{ base: 0, md: 10 }}
     >
       {/* Message header */}
       <Flex
