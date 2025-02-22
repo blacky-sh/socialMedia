@@ -168,11 +168,10 @@ const UserHeader = ({ user }) => {
           >
             {following ? "Unfollow" : "Follow"}
           </Button>
-          {following && (
-            <Button size={"sm"} onClick={handleMessage}>
-              Message
-            </Button>
-          )}
+
+          <Button size={"sm"} onClick={handleMessage}>
+            Message
+          </Button>
         </Flex>
       )}
       <Flex w={"full"} justifyContent={"space-between"}>
