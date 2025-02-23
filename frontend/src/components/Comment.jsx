@@ -61,7 +61,7 @@ const Comment = ({ reply, lastReply, postId, onDelete }) => {
               : ""}{" "}
             ago
           </Text>
-          {currentUser._id === reply.userId && (
+          {currentUser?._id === reply.userId && (
             <IconButton
               icon={<DeleteIcon />}
               size="sm"
