@@ -109,7 +109,7 @@ const ChatPage = () => {
       const mockConversation = {
         mock: true,
         lastMessage: {
-          text: "",
+          text: " ",
           sender: "",
         },
         _id: Date.now(),
@@ -121,7 +121,7 @@ const ChatPage = () => {
           },
         ],
       };
-      setConversations((prevConvs) => [...prevConvs, mockConversation]);
+      setConversations((prevConvs) => [mockConversation, ...prevConvs]);
     } catch (error) {
       showToast("Error", error.message, "error");
     } finally {
