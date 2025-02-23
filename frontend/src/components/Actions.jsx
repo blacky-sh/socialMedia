@@ -139,7 +139,7 @@ const Actions = ({ post }) => {
         ? `${window.location.href}${username}/post/${post._id}`
         : window.location.href;
     navigator.clipboard.writeText(postUrl);
-    showToast("Success", "Link copied to clipboard", "success");
+    showToast("Success", "Post Link copied to clipboard", "success");
   };
 
   return (
