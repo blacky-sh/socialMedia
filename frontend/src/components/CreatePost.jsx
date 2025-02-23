@@ -28,6 +28,7 @@ import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
 
 const MAX_CHAR = 500;
+const MAX_DESC_CHAR = 20;
 
 const CreatePost = ({ onPostCreated }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,7 +38,9 @@ const CreatePost = ({ onPostCreated }) => {
   const [isLostItem, setIsLostItem] = useState(false);
   const [category, setCategory] = useState("");
   const [propertyType, setPropertyType] = useState("");
+  const [description, setDescription] = useState("");
   const [remainingChar, setRemainingChar] = useState(MAX_CHAR);
+  const [remainingDescChar, setRemainingDescChar] = useState(MAX_DESC_CHAR);
   const user = useRecoilValue(userAtom);
   const showToast = useShowToast();
   const [loading, setLoading] = useState(false);
@@ -55,6 +58,18 @@ const CreatePost = ({ onPostCreated }) => {
     }
   };
 
+  const handleDescriptionChange = (e) => {
+    const inputText = e.target.value;
+    if (inputText.length > MAX_DESC_CHAR) {
+      const truncatedText = inputText.slice(0, MAX_DESC_CHAR);
+      setDescription(truncatedText);
+      setRemainingDescChar(0);
+    } else {
+      setDescription(inputText);
+      setRemainingDescChar(MAX_DESC_CHAR - inputText.length);
+    }
+  };
+
   const handleCreatePost = async () => {
     setLoading(true);
     try {
@@ -68,7 +83,11 @@ const CreatePost = ({ onPostCreated }) => {
           text: postText,
           img: imgUrl,
           category: isLostItem ? category : "",
-          propertyType: isLostItem ? propertyType : "",
+          propertyType: isLostItem
+            ? propertyType == "Other"
+              ? description
+              : propertyType
+            : "",
         }),
       });
 
@@ -84,6 +103,7 @@ const CreatePost = ({ onPostCreated }) => {
       setImgUrl("");
       setCategory("");
       setPropertyType("");
+      setDescription("");
       setIsLostItem(false);
     } catch (error) {
       showToast("Error", error, "error");
@@ -161,6 +181,26 @@ const CreatePost = ({ onPostCreated }) => {
                     <option value="Pet">Pet</option>
                     <option value="Other">Other</option>
                   </Select>
+
+                  {propertyType === "Other" && (
+                    <FormControl>
+                      <Input
+                        placeholder="Specify other property type"
+                        onChange={handleDescriptionChange}
+                        value={description}
+                        mb={4}
+                      />
+                      <Text
+                        fontSize="xs"
+                        fontWeight="bold"
+                        textAlign={"right"}
+                        m={"1"}
+                        color={"gray.800"}
+                      >
+                        {remainingDescChar}/{MAX_DESC_CHAR}
+                      </Text>
+                    </FormControl>
+                  )}
                 </>
               )}
 
