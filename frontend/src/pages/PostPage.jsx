@@ -69,6 +69,19 @@ const PostPage = () => {
     }
   };
 
+  const handleDeleteReply = (replyId) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post._id === currentPost._id
+          ? {
+              ...post,
+              replies: post.replies.filter((reply) => reply._id !== replyId),
+            }
+          : post
+      )
+    );
+  };
+
   const handleReply = async () => {
     if (!replyText.trim()) return;
     try {
@@ -174,13 +187,11 @@ const PostPage = () => {
       <Divider my={4} />
 
       {currentPost.replies.map((reply) => (
-        <Box
-          key={reply._id}
-          onClick={() => navigate(`/${reply.username}`)}
-          cursor={"pointer"}
-        >
+        <Box key={reply._id} cursor={"pointer"}>
           <Comment
             reply={reply}
+            postId={currentPost._id}
+            onDelete={handleDeleteReply}
             lastReply={
               reply._id ===
               currentPost.replies[currentPost.replies.length - 1]._id

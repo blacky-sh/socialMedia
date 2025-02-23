@@ -138,6 +138,34 @@ const replyToPost = async (req, res) => {
   }
 };
 
+const deleteReply = async (req, res) => {
+  try {
+    const { postId, replyId } = req.params;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    const reply = post.replies.id(replyId);
+    if (!reply) {
+      return res.status(404).json({ error: "Reply not found" });
+    }
+
+    if (reply.userId.toString() !== userId.toString()) {
+      return res.status(401).json({ error: "Unauthorized to delete reply" });
+    }
+
+    post.replies.pull(replyId);
+    await post.save();
+
+    res.status(200).json({ message: "Reply deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 const getFeedPosts = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -214,4 +242,5 @@ export {
   getFeedPosts,
   getUserPosts,
   markAsFound,
+  deleteReply,
 };
