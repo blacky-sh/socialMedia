@@ -163,7 +163,9 @@ const Post = ({ post, postedBy }) => {
         </Link>
 
         <Flex gap={3} my={1} justifyContent={"space-between"}>
-          <Actions post={post} />
+          <Link to={`/${user.username}/post/${post._id}`}>
+            <Actions post={post} />
+          </Link>
           {currentUser?._id === user._id &&
             !post.found &&
             (post?.category == "Lost" || post?.category == "Stolen") && (
