@@ -5,11 +5,12 @@ import {
   Divider,
   Flex,
   Image,
+  Input,
   Spinner,
   Text,
 } from "@chakra-ui/react";
 import Actions from "../components/Actions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Comment from "../components/Comment";
 import useGetUserProfile from "../hooks/useGetUserProfile";
 import useShowToast from "../hooks/useShowToast";
@@ -27,6 +28,7 @@ const PostPage = () => {
   const { pid } = useParams();
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
+  const [replyText, setReplyText] = useState("");
 
   const currentPost = posts[0];
 
@@ -67,6 +69,36 @@ const PostPage = () => {
     }
   };
 
+  const handleReply = async () => {
+    if (!replyText.trim()) return;
+    try {
+      const res = await fetch(`/api/posts/reply/${currentPost._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: replyText, createdAt: new Date() }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        showToast("Error", data.error, "error");
+        return;
+      }
+      setPosts((prevPosts) => {
+        const updatedPosts = prevPosts.map((post) => {
+          if (post._id === currentPost._id) {
+            return { ...post, replies: [...post.replies, data] };
+          }
+          return post;
+        });
+        return updatedPosts;
+      });
+      setReplyText("");
+    } catch (error) {
+      showToast("Error", error.message, "error");
+    }
+  };
+
   if (!user && loading) {
     return (
       <Flex justifyContent={"center"}>
@@ -76,10 +108,9 @@ const PostPage = () => {
   }
 
   if (!currentPost) return null;
-  // console.log("currentPost", currentPost);
 
   return (
-    <>
+    <Box p={4} borderRadius={6}>
       <Flex>
         <Flex w={"full"} alignItems={"center"} gap={3}>
           <Avatar src={user.profilePic} size={"md"} name="Mark Zuckerberg" />
@@ -131,26 +162,33 @@ const PostPage = () => {
 
       <Divider my={4} />
 
-      <Flex justifyContent={"space-between"}>
-        <Flex gap={2} alignItems={"center"}>
-          <Text fontSize={"2xl"}>👋</Text>
-          <Text color={"gray.light"}>Get the app to like, reply and post.</Text>
-        </Flex>
-        <Button>Get</Button>
+      <Flex gap={2} alignItems={"center"}>
+        <Input
+          placeholder="Write a reply..."
+          value={replyText}
+          onChange={(e) => setReplyText(e.target.value)}
+        />
+        <Button onClick={handleReply}>Reply</Button>
       </Flex>
 
       <Divider my={4} />
+
       {currentPost.replies.map((reply) => (
-        <Comment
+        <Box
           key={reply._id}
-          reply={reply}
-          lastReply={
-            reply._id ===
-            currentPost.replies[currentPost.replies.length - 1]._id
-          }
-        />
+          onClick={() => navigate(`/${reply.username}`)}
+          cursor={"pointer"}
+        >
+          <Comment
+            reply={reply}
+            lastReply={
+              reply._id ===
+              currentPost.replies[currentPost.replies.length - 1]._id
+            }
+          />
+        </Box>
       ))}
-    </>
+    </Box>
   );
 };
 
