@@ -19,8 +19,8 @@ import {
 } from "../atoms/messagesAtom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
+import { CloseIcon } from "@chakra-ui/icons";
 import { useSocket } from "../context/SocketContext.jsx";
-import { MdClose } from "react-icons/md";
 import messageSound from "../assets/sounds/message.mp3";
 import { useNavigate } from "react-router-dom";
 
@@ -170,7 +170,7 @@ const MessageContainer = () => {
           mr={2}
           onClick={handleClose}
         >
-          <MdClose size={"md"} />
+          <CloseIcon size={"md"} />
         </Button>
       </Flex>
 

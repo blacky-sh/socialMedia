@@ -69,13 +69,16 @@ const Conversation = ({ conversation, isOnline }) => {
       <Stack direction={"column"} fontSize={"sm"} w={"100%"}>
         <Flex justifyContent={"space-between"}>
           <Text fontWeight="700" display={"flex"} alignItems={"center"}>
-            {user.username}{" "}
+            {user.username}
             {user.isVerified && (
               <Image src="/verified.png" w={4} h={4} ml={1} />
             )}
           </Text>
           <Text fontSize={"xs"}>
-            {formatDistanceToNow(new Date(conversation.updatedAt))} ago
+            {conversation.updatedAt
+              ? formatDistanceToNow(new Date(conversation.updatedAt))
+              : "less than a minute"}{" "}
+            ago
           </Text>
         </Flex>
 
