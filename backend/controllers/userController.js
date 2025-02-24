@@ -90,6 +90,15 @@ const loginUser = async (req, res) => {
       });
     }
 
+    if (user.isFrozen) {
+      user.isFrozen = false;
+      await user.save();
+    }
+
+    if (user.isBanned) {
+      return res.status(400).json({ error: "User account is banned" });
+    }
+
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
 
     if (!isPasswordCorrect) {
