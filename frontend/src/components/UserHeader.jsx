@@ -15,6 +15,16 @@ import { useState } from "react";
 import FollowersModal from "./FollowersModal";
 import FollowingModal from "./FollowingModal";
 import ProfilePictureModal from "./ProfilePictureModal";
+import { useDisclosure } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+} from "@chakra-ui/modal";
+import ReportForm from "./ReportForm";
 
 const UserHeader = ({ user }) => {
   const toast = useToast();
@@ -22,6 +32,7 @@ const UserHeader = ({ user }) => {
   const { handleFollowUnfollow, following, updating } = useFollowUnfollow(user);
   const setSelectedConversation = useSetRecoilState(selectedConversationAtom);
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const getUsersByIds = async (ids) => {
     try {
@@ -216,7 +227,7 @@ const UserHeader = ({ user }) => {
               <Portal>
                 <MenuList>
                   <MenuItem onClick={copyURL}>Copy link</MenuItem>
-                  <MenuItem onClick={copyURL}>Report User</MenuItem>
+                  <MenuItem onClick={onOpen}>Report User</MenuItem>
                 </MenuList>
               </Portal>
             </Menu>
@@ -245,6 +256,21 @@ const UserHeader = ({ user }) => {
           <Text fontWeight={"bold"}> Replies</Text>
         </Flex>
       </Flex> */}
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Report User</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <ReportForm
+              onClose={onClose}
+              reportType="user"
+              reportedId={user._id}
+            />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
       <FollowersModal
         isOpen={isFollowersModalOpen}

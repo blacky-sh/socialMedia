@@ -98,7 +98,7 @@ const UserPage = () => {
               <Post key={post._id} post={post} postedBy={post.postedBy} />
             ))}
           </TabPanel>
-          <TabPanel>2</TabPanel>
+          <TabPanel>Replies placeholder for future implementation.</TabPanel>
         </TabPanels>
       </Tabs>
     </>

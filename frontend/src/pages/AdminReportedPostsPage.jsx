@@ -61,11 +61,13 @@ const AdminReportedPostsPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {reports == null &&
-              reports.map((report) => (
+            {reports != null &&
+              reports?.map((report) => (
                 <Tr key={report._id}>
                   <Td>{report.reportedBy.username}</Td>
-                  <Td>{report.reportedPost.content}</Td>
+                  <Td>
+                    <Button>View Post</Button>
+                  </Td>
                   <Td>{report.reason}</Td>
                   <Td>
                     <Button

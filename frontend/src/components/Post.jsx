@@ -2,14 +2,26 @@ import { Avatar } from "@chakra-ui/avatar";
 import { Image } from "@chakra-ui/image";
 import { Box, Flex, Text, Badge, Button } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
+import { Portal } from "@chakra-ui/portal";
+import { CgMoreO } from "react-icons/cg";
 import Actions from "./Actions";
 import { useEffect, useState } from "react";
 import useShowToast from "../hooks/useShowToast";
 import { formatDistanceToNow } from "date-fns";
-import { DeleteIcon } from "@chakra-ui/icons";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import postsAtom from "../atoms/postsAtom";
+import { useDisclosure } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  ModalCloseButton,
+  ModalBody,
+} from "@chakra-ui/modal";
+import ReportForm from "./ReportForm";
 
 const Post = ({ post, postedBy }) => {
   const [user, setUser] = useState(null);
@@ -17,6 +29,7 @@ const Post = ({ post, postedBy }) => {
   const currentUser = useRecoilValue(userAtom);
   const [posts, setPosts] = useRecoilState(postsAtom);
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
     const getUser = async () => {
@@ -136,16 +149,40 @@ const Post = ({ post, postedBy }) => {
             )}
           </Flex>
           <Flex gap={4} alignItems={"center"}>
-            <Text fontSize={"xs"} color={"gray.light"}>
+            <Text fontSize={"xs"} color={"gray.light"} w={"70px"}>
               {formatDistanceToNow(new Date(post.createdAt))} ago
             </Text>
-            {currentUser?._id === user._id && (
-              <DeleteIcon
-                size={20}
-                onClick={handleDeletePost}
-                cursor={"pointer"}
-              />
-            )}
+            <Box className="icon-container">
+              <Menu>
+                <MenuButton>
+                  <CgMoreO size={20} cursor={"pointer"} />
+                </MenuButton>
+                <Portal>
+                  <MenuList>
+                    {currentUser?._id === user._id && (
+                      <MenuItem onClick={handleDeletePost}>
+                        Delete Post
+                      </MenuItem>
+                    )}
+                    <MenuItem onClick={onOpen}>Report Post</MenuItem>
+                  </MenuList>
+                </Portal>
+              </Menu>
+              <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Report Post</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <ReportForm
+                      onClose={onClose}
+                      reportType="post"
+                      reportedId={post._id}
+                    />
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
+            </Box>
           </Flex>
         </Flex>
         <Link to={`/${user.username}/post/${post._id}`}>
