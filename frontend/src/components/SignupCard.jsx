@@ -11,6 +11,7 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useSetRecoilState } from "recoil";
@@ -23,9 +24,11 @@ export default function SignupCard() {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
   const [passwordError, setPasswordError] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const showToast = useShowToast();
   const setUser = useSetRecoilState(userAtom);
 
@@ -33,10 +36,10 @@ export default function SignupCard() {
     if (password.length < 8) {
       return "Password must be at least 8 characters long.";
     }
-    if (password == inputs.email) {
+    if (password === inputs.email) {
       return "Password cannot be similar to email.";
     }
-    if (password == inputs.username) {
+    if (password === inputs.username) {
       return "Password cannot be similar to username.";
     }
     return "";
@@ -47,6 +50,11 @@ export default function SignupCard() {
     setInputs({ ...inputs, password });
     const error = validatePassword(password);
     setPasswordError(error);
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    const confirmPassword = e.target.value;
+    setInputs({ ...inputs, confirmPassword });
   };
 
   const checkUsernameAvailability = async (username) => {
@@ -78,6 +86,14 @@ export default function SignupCard() {
   const handleSignup = async () => {
     if (passwordError || usernameError) {
       showToast("Error", passwordError || usernameError, "error");
+      return;
+    }
+    if (inputs.password !== inputs.confirmPassword) {
+      showToast("Error", "Passwords do not match", "error");
+      return;
+    }
+    if (!agreeToTerms) {
+      showToast("Error", "You must agree to the terms and policies", "error");
       return;
     }
     try {
@@ -170,6 +186,32 @@ export default function SignupCard() {
                   {passwordError}
                 </Text>
               )}
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Confirm Password</FormLabel>
+              <InputGroup>
+                <Input
+                  type={"password"}
+                  onChange={handleConfirmPasswordChange}
+                  value={inputs.confirmPassword}
+                />
+              </InputGroup>
+            </FormControl>
+            <FormControl isRequired>
+              <Checkbox
+                isChecked={agreeToTerms}
+                onChange={(e) => setAgreeToTerms(e.target.checked)}
+              >
+                I agree to the{" "}
+                <a
+                  href="/privacy-security"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: "underline" }}
+                >
+                  Privacy and Security
+                </a>
+              </Checkbox>
             </FormControl>
             <Stack spacing={10} pt={2}>
               <Button
