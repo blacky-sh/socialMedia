@@ -10,6 +10,8 @@ import {
   freezeAccount,
   getUsersByIds,
   changePassword,
+  banUser, // Add this import
+  getUserPosts, // Add this import
 } from "../controllers/userController.js";
 import protectRoute from "../middlewares/protectRoute.js";
 
@@ -25,5 +27,7 @@ router.post("/follow/:id", protectRoute, followUnFollowUser); // Toggle state(fo
 router.put("/update/:id", protectRoute, updateUser);
 router.put("/freeze", protectRoute, freezeAccount);
 router.put("/change-password", protectRoute, changePassword);
+router.put("/ban/:id", protectRoute, banUser); // Add this route
+router.get("/:userId/posts", protectRoute, getUserPosts); // Add this route
 
 export default router;

@@ -42,9 +42,9 @@ const AdminDashboardPage = () => {
           <Button onClick={() => navigate("/admin/reported-users")} mb={2}>
             Review Reported Users
           </Button>
-          <Button onClick={() => navigate("/admin/posts")} mb={2}>
+          {/* <Button onClick={() => navigate("/admin/posts")} mb={2}>
             View All Posts
-          </Button>
+          </Button> */}
           <Button onClick={() => navigate("/admin/analytics")} mb={2}>
             View Analytics Dashboard
           </Button>

@@ -136,7 +136,7 @@ const AdminReportedPostsPage = () => {
               <Th>Reported By</Th>
               <Th>Post Content</Th>
               <Th>Reason</Th>
-              <Th>Actions</Th>
+              {/* <Th>Actions</Th> */}
             </Tr>
           </Thead>
           <Tbody>
@@ -149,10 +149,10 @@ const AdminReportedPostsPage = () => {
                   </Button>
                 </Td>
                 <Td>{report.reason}</Td>
-                <Td>
+                {/* <Td>
                   <Button onClick={handleDeletePost}>Delete Post</Button>
                   <Button onClick={handleRemoveReport}>Remove Report</Button>
-                </Td>
+                </Td> */}
               </Tr>
             ))}
           </Tbody>

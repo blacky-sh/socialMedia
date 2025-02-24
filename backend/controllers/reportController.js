@@ -99,6 +99,18 @@ const markPostAsSafe = async (req, res) => {
   }
 };
 
+const markUserAsSafe = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    await Report.findOneAndDelete({ reportedUser: userId });
+    res
+      .status(200)
+      .json({ message: "User marked as safe and report removed successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 export {
   reportUser,
   reportPost,
@@ -106,4 +118,5 @@ export {
   updateReportStatus,
   removeReport,
   markPostAsSafe,
+  markUserAsSafe,
 };

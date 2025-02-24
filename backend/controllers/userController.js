@@ -318,6 +318,36 @@ const changePassword = async (req, res) => {
   }
 };
 
+const banUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { banExpires } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    user.isBanned = true;
+    user.banExpires = banExpires || null;
+    await user.save();
+
+    res.status(200).json({ message: "User banned successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getUserPosts = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const posts = await Post.find({ postedBy: userId }).sort({ createdAt: -1 });
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export {
   signupUser,
   loginUser,
@@ -329,4 +359,6 @@ export {
   freezeAccount,
   getUsersByIds,
   changePassword,
+  banUser, // Add this export
+  getUserPosts, // Add this export
 };
