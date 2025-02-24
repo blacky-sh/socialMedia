@@ -1,4 +1,4 @@
-### Setup .env file
+### Setup .env file in the root directory
 
 ```js
 PORT=...
