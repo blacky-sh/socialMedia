@@ -79,7 +79,7 @@ const loginUser = async (req, res) => {
     const user = await User.findOne({ username });
 
     if (!user) {
-      return res.status(400).json({ error: "Invalid username or password" });
+      return res.status(400).json({ error: "Invalid username" });
     }
 
     // Check if the user is currently restricted from logging in
@@ -103,7 +103,7 @@ const loginUser = async (req, res) => {
       }
 
       await user.save();
-      return res.status(400).json({ error: "Invalid username or password" });
+      return res.status(400).json({ error: "Invalid password" });
     }
 
     // Reset failed login attempts on successful login
