@@ -34,7 +34,7 @@ io.on("connection", (socket) => {
       );
       await Conversation.updateOne(
         { _id: conversationId },
-        { $set: { "lastMessage.seen": true, unseenMessagesCount: 0 } }
+        { $set: { "lastMessage.seen": true } }
       );
       io.to(userSocketMap[userId]).emit("messagesSeen", { conversationId });
     } catch (error) {

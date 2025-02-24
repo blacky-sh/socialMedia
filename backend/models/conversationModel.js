@@ -11,10 +11,6 @@ const conversationSchema = new mongoose.Schema(
         default: false,
       },
     },
-    unseenMessagesCount: {
-      type: Number,
-      default: 0,
-    },
   },
   { timestamps: true }
 );

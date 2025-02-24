@@ -8,7 +8,6 @@ import {
   WrapItem,
   useColorMode,
   useColorModeValue,
-  Badge,
 } from "@chakra-ui/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
@@ -25,6 +24,7 @@ const Conversation = ({ conversation, isOnline }) => {
   );
   const colorMode = useColorMode();
 
+  // console.log("selectedConverstion", selectedConversation);
   return (
     <Flex
       gap={4}
@@ -85,19 +85,6 @@ const Conversation = ({ conversation, isOnline }) => {
             ? lastMessage.text.substring(0, 18) + "..."
             : lastMessage.text || <BsFillImageFill size={16} />}
         </Text>
-        {conversation.unseenMessagesCount > 0 && (
-          <Badge
-            colorScheme="gray"
-            borderRadius={50}
-            w={6}
-            h={6}
-            textAlign={"center"}
-            alignContent={"center"}
-            alignSelf={"flex-end"}
-          >
-            {conversation.unseenMessagesCount}
-          </Badge>
-        )}
       </Stack>
     </Flex>
   );

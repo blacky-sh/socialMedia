@@ -20,11 +20,7 @@ async function sendMessage(req, res) {
           text: message,
           sender: senderId,
         },
-        unseenMessagesCount: 1,
       });
-      await conversation.save();
-    } else {
-      conversation.unseenMessagesCount += 1;
       await conversation.save();
     }
 
