@@ -19,6 +19,7 @@ import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminReportedPostsPage from "./pages/AdminReportedPostsPage";
 import AdminHeader from "./components/AdminHeader";
 import { SettingsPage } from "./pages/SettingsPage";
+import PrivacySecurityPage from "./pages/PrivacyAndPolicy";
 
 function App() {
   const user = useRecoilValue(userAtom);
@@ -106,6 +107,7 @@ function App() {
               admin ? <AdminReportedPostsPage /> : <Navigate to={"/admin"} />
             }
           />
+          <Route path="/privacy-security" element={<PrivacySecurityPage />} />
         </Routes>
       </Container>
     </Box>
