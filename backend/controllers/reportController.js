@@ -30,6 +30,16 @@ const reportPost = async (req, res) => {
   }
 };
 
+const removeReport = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    await Report.findOneAndDelete({ reportedPost: postId });
+    res.status(200).json({ message: "Report removed successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const getReports = async (req, res) => {
   try {
     const reports = await Report.find().populate(
@@ -77,4 +87,23 @@ const updateReportStatus = async (req, res) => {
   }
 };
 
-export { reportUser, reportPost, getReports, updateReportStatus };
+const markPostAsSafe = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    await Report.findOneAndDelete({ reportedPost: postId });
+    res
+      .status(200)
+      .json({ message: "Post marked as safe and report removed successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export {
+  reportUser,
+  reportPost,
+  getReports,
+  updateReportStatus,
+  removeReport,
+  markPostAsSafe,
+};

@@ -4,6 +4,8 @@ import {
   reportPost,
   getReports,
   updateReportStatus,
+  removeReport,
+  markPostAsSafe, // Add this import
 } from "../controllers/reportController.js";
 import protectRoute from "../middlewares/protectRoute.js";
 
@@ -13,5 +15,7 @@ router.post("/user", protectRoute, reportUser);
 router.post("/post", protectRoute, reportPost);
 router.get("/", protectRoute, getReports);
 router.put("/:id", protectRoute, updateReportStatus);
+router.delete("/reported-posts/:postId", protectRoute, removeReport);
+router.put("/mark-safe/:postId", protectRoute, markPostAsSafe); // Add this route
 
 export default router;
