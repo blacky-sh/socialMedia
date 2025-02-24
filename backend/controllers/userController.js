@@ -77,22 +77,39 @@ const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ username });
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      user?.password || ""
-    );
 
-    if (!user || !isPasswordCorrect)
+    if (!user) {
       return res.status(400).json({ error: "Invalid username or password" });
+    }
 
-    if (user.isFrozen) {
-      user.isFrozen = false;
+    // Check if the user is currently restricted from logging in
+    if (user.loginTimeout && new Date() < user.loginTimeout) {
+      const remainingTime = Math.ceil((user.loginTimeout - new Date()) / 1000);
+      return res.status(400).json({
+        error: `Too many failed attempts. Try again in ${remainingTime} seconds.`,
+      });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordCorrect) {
+      user.failedLoginAttempts += 1;
+
+      // Apply timeout based on the number of failed attempts
+      if (user.failedLoginAttempts >= 10) {
+        user.loginTimeout = new Date(Date.now() + 60 * 1000); // 1 minute
+      } else if (user.failedLoginAttempts >= 5) {
+        user.loginTimeout = new Date(Date.now() + 30 * 1000); // 30 seconds
+      }
+
       await user.save();
+      return res.status(400).json({ error: "Invalid username or password" });
     }
 
-    if (user.isBanned) {
-      return res.status(400).json({ error: "User account is banned" });
-    }
+    // Reset failed login attempts on successful login
+    user.failedLoginAttempts = 0;
+    user.loginTimeout = null;
+    await user.save();
 
     generateTokenAndSetCookie(user._id, res);
 
@@ -106,7 +123,6 @@ const loginUser = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
-    console.log("Error in loginUser: ", error.message);
   }
 };
 
