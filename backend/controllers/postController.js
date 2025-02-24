@@ -109,6 +109,31 @@ const likeUnlikePost = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+const updatePost = async (req, res) => {
+  try {
+    const { text, img } = req.body;
+    const postId = req.params.id;
+    const userId = req.user._id;
+
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (post.postedBy.toString() !== userId.toString()) {
+      return res.status(401).json({ error: "Unauthorized to update post" });
+    }
+
+    post.text = text || post.text;
+    post.img = img !== undefined ? img : post.img;
+
+    await post.save();
+
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 const replyToPost = async (req, res) => {
   try {
@@ -243,4 +268,5 @@ export {
   getUserPosts,
   markAsFound,
   deleteReply,
+  updatePost,
 };

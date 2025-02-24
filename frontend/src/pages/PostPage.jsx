@@ -8,6 +8,15 @@ import {
   Input,
   Spinner,
   Text,
+  Textarea,
+  useDisclosure,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
 import Actions from "../components/Actions";
 import { useEffect, useState } from "react";
@@ -18,8 +27,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
-import { DeleteIcon } from "@chakra-ui/icons";
 import postsAtom from "../atoms/postsAtom";
+import ReportForm from "../components/ReportForm";
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
+import { Portal } from "@chakra-ui/portal";
+import { CgMoreO } from "react-icons/cg";
 
 const PostPage = () => {
   const { user, loading } = useGetUserProfile();
@@ -29,6 +41,18 @@ const PostPage = () => {
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
   const [replyText, setReplyText] = useState("");
+  const {
+    isOpen: isReportOpen,
+    onOpen: onReportOpen,
+    onClose: onReportClose,
+  } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure();
+  const [editText, setEditText] = useState("");
+  const [editImg, setEditImg] = useState("");
 
   const currentPost = posts[0];
 
@@ -49,6 +73,43 @@ const PostPage = () => {
     };
     getPost();
   }, [showToast, pid, setPosts]);
+
+  const handleEditPost = async () => {
+    try {
+      const res = await fetch(`/api/posts/update/${currentPost._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text: editText, img: editImg }),
+      });
+      const data = await res.json();
+      if (data.error) {
+        showToast("Error", data.error, "error");
+        return;
+      }
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post._id === currentPost._id
+            ? { ...post, text: editText, img: editImg }
+            : post
+        )
+      );
+      onEditClose();
+      showToast("Success", "Post updated successfully", "success");
+    } catch (error) {
+      showToast("Error", error.message, "error");
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setEditImg(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleDeletePost = async () => {
     try {
@@ -146,13 +207,79 @@ const PostPage = () => {
             {formatDistanceToNow(new Date(currentPost.createdAt))} ago
           </Text>
 
-          {currentUser?._id === user._id && (
-            <DeleteIcon
-              size={20}
-              cursor={"pointer"}
-              onClick={handleDeletePost}
-            />
-          )}
+          <Box className="icon-container">
+            <Menu>
+              <MenuButton>
+                <CgMoreO size={20} cursor={"pointer"} />
+              </MenuButton>
+              <Portal>
+                <MenuList>
+                  {currentUser?._id === user._id && (
+                    <>
+                      <MenuItem onClick={handleDeletePost}>
+                        Delete Post
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          setEditText(currentPost.text);
+                          setEditImg(currentPost.img);
+                          onEditOpen();
+                        }}
+                      >
+                        Edit Post
+                      </MenuItem>
+                    </>
+                  )}
+                  <MenuItem onClick={onReportOpen}>Report Post</MenuItem>
+                </MenuList>
+              </Portal>
+            </Menu>
+            <Modal isOpen={isReportOpen} onClose={onReportClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Report Post</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <ReportForm
+                    onClose={onReportClose}
+                    reportType="post"
+                    reportedId={pid}
+                  />
+                </ModalBody>
+              </ModalContent>
+            </Modal>
+            <Modal isOpen={isEditOpen} onClose={onEditClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <ModalHeader>Edit Post</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Textarea
+                    value={editText}
+                    onChange={(e) => setEditText(e.target.value)}
+                    placeholder="Edit your post"
+                  />
+                  <Input type="file" onChange={handleFileChange} mt={4} />
+                  {editImg && (
+                    <Box mt={4}>
+                      <Image src={editImg} alt="Post image" />
+                      <Button mt={2} onClick={() => setEditImg("")}>
+                        Remove Image
+                      </Button>
+                    </Box>
+                  )}
+                </ModalBody>
+                <ModalFooter>
+                  <Button colorScheme="blue" mr={3} onClick={handleEditPost}>
+                    Save
+                  </Button>
+                  <Button variant="ghost" onClick={onEditClose}>
+                    Cancel
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+          </Box>
         </Flex>
       </Flex>
 
