@@ -12,20 +12,38 @@ import {
   Button,
   useColorModeValue,
   useToast,
+  Input, // Import Input component
 } from "@chakra-ui/react";
 
 const AdminUsersPage = () => {
   const toast = useToast();
   const [users, setUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(""); // Add state for search term
+  const [filteredUsers, setFilteredUsers] = useState([]); // Add state for filtered users
 
   useEffect(() => {
     const fetchUsers = async () => {
       const res = await fetch("/api/admin/users");
       const data = await res.json();
       setUsers(data);
+      setFilteredUsers(data); // Initialize filtered users with all users
     };
     fetchUsers();
   }, []);
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+    if (term.trim() === "") {
+      setFilteredUsers(users);
+    } else {
+      const filtered = users.filter((user) =>
+        user.username.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredUsers(filtered);
+    }
+  };
 
   const handleBanUser = async (userId, isBanned) => {
     const method = isBanned ? "DELETE" : "PUT"; // Use DELETE to unban, PUT to ban
@@ -42,7 +60,12 @@ const AdminUsersPage = () => {
       )
     );
 
-    // Show success toast
+    setFilteredUsers(
+      filteredUsers.map((user) =>
+        user._id === userId ? { ...user, isBanned: !isBanned } : user
+      )
+    );
+
     toast({
       title: `User ${isBanned ? "Unbanned" : "Banned"}`,
       description: `User ${userId} has been ${
@@ -73,7 +96,12 @@ const AdminUsersPage = () => {
         <Heading fontSize={"2xl"} mb={4}>
           Manage Users
         </Heading>
-
+        <Input
+          placeholder="Search by username"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          mb={4}
+        />
         <Table variant="simple">
           <Thead>
             <Tr>
@@ -84,7 +112,7 @@ const AdminUsersPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <Tr key={user._id}>
                 <Td>{user.username}</Td>
                 <Td>{user.email}</Td>
