@@ -5,6 +5,8 @@ import Report from "../models/reportModel.js";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
+import Conversation from "../models/conversationModel.js";
+import Message from "../models/messageModel.js";
 
 const signupAdmin = async (req, res) => {
   try {
@@ -166,7 +168,16 @@ const getDashboardStats = async (req, res) => {
     const userCount = await User.countDocuments();
     const postCount = await Post.countDocuments();
     const reportCount = await Report.countDocuments();
-    res.status(200).json({ userCount, postCount, reportCount });
+    const conversationCount = await Conversation.countDocuments();
+    const messageCount = await Message.countDocuments();
+
+    res.status(200).json({
+      userCount,
+      postCount,
+      reportCount,
+      conversationCount,
+      messageCount,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

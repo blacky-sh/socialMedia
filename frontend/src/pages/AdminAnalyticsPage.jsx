@@ -39,6 +39,8 @@ const AdminAnalyticsPage = () => {
         <Text mb={4}>Total Users: {stats.userCount}</Text>
         <Text mb={4}>Total Posts: {stats.postCount}</Text>
         <Text mb={4}>Total Reports: {stats.reportCount}</Text>
+        <Text mb={4}>Total Conversations: {stats.conversationCount}</Text>
+        <Text mb={4}>Total Messages: {stats.messageCount}</Text>
       </Box>
     </Flex>
   );
